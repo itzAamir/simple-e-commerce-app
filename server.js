@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const Razorpay = require("razorpay");
 const PORT = process.env.PORT || 3001;
+const path = require("path");
 const { nanoid } = require("nanoid");
 
 app.use(require("cors")());
@@ -12,9 +13,13 @@ const rzpInstance = new Razorpay({
 	key_secret: "1kyHqTAQsSgrReMcvdepJ4Vw",
 });
 
-app.get("/", (req, res) => {
-	res.send("ok");
-});
+if (process.env.NODE_ENV === "production") {
+	app.use(express.static(path.join(__dirname, "client", "build")));
+
+	app.get("*", (req, res) => {
+		res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+	});
+}
 
 app.post("/razorpay", async (req, res) => {
 	const amount = req.body.price;

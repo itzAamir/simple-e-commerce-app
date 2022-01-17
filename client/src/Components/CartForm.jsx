@@ -43,7 +43,7 @@ export default function CartForm(props) {
 	return (
 		<form onSubmit={props.onPayment}>
 			<h1 className="text-2xl font-semibold">Shipping & Delivery</h1>
-			<div className="grid grid-cols-3 font-sans mt-5 gap-4">
+			<div className="md:grid md:grid-cols-3 font-sans mt-5 gap-4">
 				<div className="col-span-2">
 					<InputBox label="Full Name" id="full-name" type="text" />
 				</div>

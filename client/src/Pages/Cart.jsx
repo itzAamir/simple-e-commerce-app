@@ -66,25 +66,20 @@ export default function Cart() {
 
 	return (
 		<div>
-			<main className="p-20">
-				<section className="grid grid-cols-3 gap-2">
+			<main className="p-10 md:p-20">
+				<section className="md:grid md:grid-cols-3 gap-2">
 					<div>
 						<h1 className="text-2xl font-semibold">Shopping Cart</h1>
 						<div className="mt-4 max-h-[65vh] overflow-auto">
 							<ShopCard />
 						</div>
-						<div className="mt-4 flex justify-between w-4/5">
+						<div className="mt-4 flex justify-between md:w-4/5">
 							<h3 className="text-xl font-bold">Total</h3>
 							<h3 className="text-xl font-bold">$400</h3>
 						</div>
-						{/* <button
-							onClick={handlePayment}
-							className="mt-4 bg-indigo-600 text-white font-semibold w-80 py-2 hover:bg-indigo-800 rounded-sm shadow-lg shadow-indigo-400 ease-in-out duration-150"
-						>
-							Add to cart
-						</button> */}
 					</div>
-					<div className="col-span-2">
+					<hr className="border-gray-400 mt-4 md:hidden" />
+					<div className="col-span-2 md:w-4/5 mt-8">
 						<CartForm onPayment={handlePayment} />
 					</div>
 				</section>
@@ -95,7 +90,7 @@ export default function Cart() {
 
 const ShopCard = () => {
 	return (
-		<div className="p-4 my-5 bg-white w-4/5 rounded-md shadow-lg border-[1px] border-gray-300">
+		<div className="p-4 my-5 bg-white md:w-4/5 rounded-md shadow-lg border-[1px] border-gray-300">
 			<div className="flex justify-between items-center">
 				<div className="flex items-center">
 					<img
