@@ -2,8 +2,27 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import CartForm from "../Components/CartForm";
+import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 export default function Cart() {
+	const location = useLocation();
+	const [cartProducts, setCartProducts] = useState([]);
+	const [totalCartPrice, setTotalCartPrice] = useState(0);
+
+	useEffect(() => {
+		if (!location.state) return setCartProducts([]);
+		if (!location.state.length === 0) return setCartProducts([]);
+		setCartProducts(location.state);
+	}, [location.state]);
+
+	useEffect(() => {
+		const totalPrice = cartProducts.reduce((total, prod) => {
+			return total + prod.price;
+		}, 0);
+		setTotalCartPrice(totalPrice);
+	}, [cartProducts]);
+
 	const loadScript = (src) => {
 		return new Promise((resolve) => {
 			const script = document.createElement("script");
@@ -59,27 +78,49 @@ export default function Cart() {
 		);
 		if (!res) return;
 
-		const data = await createOrder(100);
+		const data = await createOrder(totalCartPrice);
 		const rzp1 = new window.Razorpay(getOptions(data.orderId));
 		rzp1.open();
 	};
 
+	const handleProductDelete = (prodId) => {
+		const products = [...cartProducts];
+		const newProducts = products.filter((item) => item.id !== prodId);
+		setCartProducts(newProducts);
+	};
+
+	if (cartProducts.length === 0) {
+		return (
+			<div className="h-screen flex justify-center items-center">
+				<h1 className="text-3xl">No cart</h1>
+			</div>
+		);
+	}
+
 	return (
 		<div>
 			<main className="p-10 md:p-20">
-				<section className="md:grid md:grid-cols-3 gap-2">
+				<section className="md:grid md:grid-cols-3 gap-10">
 					<div>
 						<h1 className="text-2xl font-semibold">Shopping Cart</h1>
 						<div className="mt-4 max-h-[65vh] overflow-auto">
-							<ShopCard />
+							{cartProducts.map((product) => (
+								<ShopCard
+									key={product.id}
+									item={product}
+									onClose={handleProductDelete}
+								/>
+							))}
 						</div>
-						<div className="mt-4 flex justify-between md:w-4/5">
+						<div className="mt-4 flex justify-between">
 							<h3 className="text-xl font-bold">Total</h3>
-							<h3 className="text-xl font-bold">$400</h3>
+							<h3 className="text-xl font-bold">
+								${totalCartPrice.toFixed(2)}
+							</h3>
 						</div>
 					</div>
-					<hr className="border-gray-400 mt-4 md:hidden" />
-					<div className="col-span-2 md:w-4/5 mt-8">
+					<hr className="border-gray-400 mt-4 sm:hidden block" />
+					<div className="col-span-2 md:w-4/5 md:mt-0 mt-8">
 						<CartForm onPayment={handlePayment} />
 					</div>
 				</section>
@@ -88,19 +129,18 @@ export default function Cart() {
 	);
 }
 
-const ShopCard = () => {
+const ShopCard = ({ item, onClose }) => {
 	return (
-		<div className="p-4 my-5 bg-white md:w-4/5 rounded-md shadow-lg border-[1px] border-gray-300">
+		<div className="p-4 my-5 bg-white  rounded-md shadow-lg border-[1px] border-gray-300">
 			<div className="flex justify-between items-center">
 				<div className="flex items-center">
-					<img
-						src="https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_.jpg"
-						alt="..."
-						className="w-[3rem] h-[3rem] mr-3"
-					/>
-					<h1 className="text-lg">Mens Cotton Jacket</h1>
+					<img src={item.image} alt="..." className="w-[3rem] h-[3rem] mr-3" />
+					<h1 className="text-lg">{item.title}</h1>
 				</div>
-				<FontAwesomeIcon icon={faTimesCircle} />
+				<FontAwesomeIcon
+					icon={faTimesCircle}
+					onClick={() => onClose(item.id)}
+				/>
 			</div>
 			<div className="mt-4 flex justify-between">
 				<div>
@@ -113,7 +153,7 @@ const ShopCard = () => {
 						<option value="5">5</option>
 					</select>
 				</div>
-				<p>$191</p>
+				<p>${item.price}</p>
 			</div>
 		</div>
 	);

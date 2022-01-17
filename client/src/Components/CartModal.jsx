@@ -67,7 +67,7 @@ export default function CartModal({
 				<div className="modal-footer w-full absolute bottom-0 left-0 flex justify-center">
 					{cartProducts.length > 0 ? (
 						<>
-							<Link to="/cart" className="w-11/12">
+							<Link to="/cart" state={cartProducts} className="w-11/12">
 								<button
 									// onClick={handleCheckout}
 									className="my-3 mx-auto font-semibold bg-green-700 hover:bg-green-600 text-white w-full py-3 rounded-sm shadow-lg shadow-green-700/70"
