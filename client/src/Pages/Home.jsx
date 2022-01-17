@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import Navbar from "./Components/Navbar";
-import ProductCard from "./Components/ProductCard";
+import Navbar from "../Components/Navbar";
+import ProductCard from "../Components/ProductCard";
 import axios from "axios";
-import "./index.css";
 
-export default function App() {
+export default function Home() {
 	const [products, setProducts] = useState([]);
 	const [searchedTerm, setSearchedTerm] = useState("");
 	const [cartProducts, setCartProducts] = useState([]);
