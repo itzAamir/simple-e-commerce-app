@@ -46,7 +46,7 @@ export default function Cart() {
 	};
 
 	const createOrder = async (price) => {
-		const { data } = await axios.post("http://localhost:3001/razorpay", {
+		const { data } = await axios.post("/razorpay", {
 			price,
 		});
 		return data;
