@@ -45,25 +45,57 @@ export default function CartForm(props) {
 			<h1 className="text-2xl font-semibold">Shipping & Delivery</h1>
 			<div className="md:grid md:grid-cols-3 font-sans mt-5 gap-4">
 				<div className="col-span-2">
-					<InputBox label="Full Name" id="full-name" type="text" />
+					<InputBox
+						label="Full Name"
+						id="full-name"
+						type="text"
+						value={props.userInfo.fullName}
+						onChange={(text) => props.onUserInfoChange(text, "fullName")}
+					/>
 				</div>
 				<div>
-					<InputBox label="Phone Number" id="phone" type="text" />
+					<InputBox
+						label="Phone Number"
+						id="phone"
+						type="text"
+						value={props.userInfo.phone}
+						onChange={(text) => props.onUserInfoChange(text, "phone")}
+					/>
 				</div>
 				<div className="col-span-3">
-					<InputBox label="Address" id="address" type="text" />
+					<InputBox
+						label="Address"
+						id="address"
+						type="text"
+						value={props.userInfo.address}
+						onChange={(text) => props.onUserInfoChange(text, "address")}
+					/>
 				</div>
 				<div className="col-span-2">
-					<InputBox label="City" id="city" type="text" />
+					<InputBox
+						label="City"
+						id="city"
+						type="text"
+						value={props.userInfo.city}
+						onChange={(text) => props.onUserInfoChange(text, "city")}
+					/>
 				</div>
 				<div>
-					<InputBox label="Postal Code" id="postal-code" type="text" />
+					<InputBox
+						label="Postal Code"
+						id="postal-code"
+						type="text"
+						value={props.userInfo.postalCode}
+						onChange={(text) => props.onUserInfoChange(text, "postalCode")}
+					/>
 				</div>
 				<div className="col-span-3">
 					<label htmlFor="state">State</label>
 					<select
 						id="state"
 						className="mt-2 border-[2px] border-gray-500 outline-none rounded-md px-3 py-1 w-full focus:border-blue-500 hover:border-gray-400"
+						onChange={(e) => props.onUserInfoChange(e.target.value, "state")}
+						value={props.userInfo.state}
 					>
 						{STATES.map((state) => (
 							<option value={state} key={state}>

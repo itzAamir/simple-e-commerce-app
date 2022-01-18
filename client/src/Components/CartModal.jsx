@@ -2,26 +2,12 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 
-export default function CartModal({
-	isOpen,
-	onClose,
-	cartProducts,
-	onPurchase,
-}) {
+export default function CartModal({ isOpen, onClose, cartProducts }) {
 	const handleClose = (e) => {
 		if (e.target.id === "overlay") {
 			onClose();
 		}
 	};
-
-	// const handleCheckout = () => {
-	// 	const totalPrice = cartProducts.reduce((acc, prod) => prod.price + acc, 0);
-	// 	const message = `Congratulations!! for purchasing ${
-	// 		cartProducts.length
-	// 	} products of worth $${totalPrice.toFixed(2)}`;
-	// 	onPurchase();
-	// 	alert(message);
-	// };
 
 	return (
 		<div

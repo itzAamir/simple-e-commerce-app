@@ -3,12 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import CartModal from "./CartModal";
 
-export default function Navbar({
-	searchedTerm,
-	onSearchChange,
-	cartProducts,
-	onPurchase,
-}) {
+export default function Navbar({ searchedTerm, onSearchChange, cartProducts }) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const closeModal = () => {
@@ -21,7 +16,6 @@ export default function Navbar({
 				isOpen={isModalOpen}
 				onClose={closeModal}
 				cartProducts={cartProducts}
-				onPurchase={onPurchase}
 			/>
 			<div>
 				<h1 className="font-bold text-3xl uppercase text-slate-700">

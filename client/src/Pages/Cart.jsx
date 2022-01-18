@@ -2,13 +2,21 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import CartForm from "../Components/CartForm";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 export default function Cart() {
 	const location = useLocation();
 	const [cartProducts, setCartProducts] = useState([]);
 	const [totalCartPrice, setTotalCartPrice] = useState(0);
+	const [userInfo, setUserInfo] = useState({
+		fullName: "",
+		phone: "",
+		address: "",
+		city: "",
+		postalCode: "",
+		state: "",
+	});
 
 	useEffect(() => {
 		if (!location.state) return setCartProducts([]);
@@ -18,7 +26,7 @@ export default function Cart() {
 
 	useEffect(() => {
 		const totalPrice = cartProducts.reduce((total, prod) => {
-			return total + prod.price;
+			return (total + prod.price) * prod.quantity;
 		}, 0);
 		setTotalCartPrice(totalPrice);
 	}, [cartProducts]);
@@ -48,12 +56,13 @@ export default function Cart() {
 				"https://p7.hiclipart.com/preview/8/373/133/shopping-bags-trolleys-shopping-cart-logo-clip-art-online-shop.jpg",
 			order_id,
 			handler: function (response) {
-				console.log(response);
+				alert(
+					`Congrats ${userInfo.fullName}, your order has been placed successfully.`
+				);
 			},
 			prefill: {
-				name: "Aamir Khan",
-				email: "amirpc190320@gmail.com",
-				contact: "9827238321",
+				name: userInfo.fullName,
+				contact: userInfo.phone,
 			},
 			notes: {
 				address: "Aamir's Office",
@@ -89,10 +98,28 @@ export default function Cart() {
 		setCartProducts(newProducts);
 	};
 
+	const handleUserInfoChange = (value, type) => {
+		const newUserInfo = { ...userInfo };
+		newUserInfo[type] = value;
+		setUserInfo(newUserInfo);
+	};
+
+	const handleQtyChange = (qty, id) => {
+		const newProducts = [...cartProducts];
+		const product = newProducts.find((prod) => prod.id === id);
+		product.quantity = parseInt(qty);
+		setCartProducts(newProducts);
+	};
+
 	if (cartProducts.length === 0) {
 		return (
-			<div className="h-screen flex justify-center items-center">
-				<h1 className="text-3xl">No cart</h1>
+			<div className="h-screen flex justify-center items-center flex-col">
+				<h1 className="text-3xl">No items in cart</h1>
+				<Link to="/">
+					<button className="mt-2 py-2 px-3 rounded-xl text-indigo-600">
+						Visit Shop
+					</button>
+				</Link>
 			</div>
 		);
 	}
@@ -109,6 +136,7 @@ export default function Cart() {
 									key={product.id}
 									item={product}
 									onClose={handleProductDelete}
+									onQtyChange={handleQtyChange}
 								/>
 							))}
 						</div>
@@ -121,7 +149,11 @@ export default function Cart() {
 					</div>
 					<hr className="border-gray-400 mt-4 sm:hidden block" />
 					<div className="col-span-2 md:w-4/5 md:mt-0 mt-8">
-						<CartForm onPayment={handlePayment} />
+						<CartForm
+							onPayment={handlePayment}
+							userInfo={userInfo}
+							onUserInfoChange={handleUserInfoChange}
+						/>
 					</div>
 				</section>
 			</main>
@@ -129,7 +161,7 @@ export default function Cart() {
 	);
 }
 
-const ShopCard = ({ item, onClose }) => {
+const ShopCard = ({ item, onClose, onQtyChange }) => {
 	return (
 		<div className="p-4 my-5 bg-white  rounded-md shadow-lg border-[1px] border-gray-300">
 			<div className="flex justify-between items-center">
@@ -140,12 +172,17 @@ const ShopCard = ({ item, onClose }) => {
 				<FontAwesomeIcon
 					icon={faTimesCircle}
 					onClick={() => onClose(item.id)}
+					className="cursor-pointer hover:text-red-400"
 				/>
 			</div>
 			<div className="mt-4 flex justify-between">
 				<div>
 					<label htmlFor="qty-inp">Qty: </label>
-					<select id="qty-inp">
+					<select
+						id="qty-inp"
+						value={item.quantity}
+						onChange={(e) => onQtyChange(e.target.value, item.id)}
+					>
 						<option value="1">1</option>
 						<option value="2">2</option>
 						<option value="3">3</option>
@@ -153,7 +190,7 @@ const ShopCard = ({ item, onClose }) => {
 						<option value="5">5</option>
 					</select>
 				</div>
-				<p>${item.price}</p>
+				<p>${item.price * item.quantity}</p>
 			</div>
 		</div>
 	);
